@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <sys/time.h>
 
 /* define each move by the state achieved when applying it to a solved cube */
 int moves[9][8] = {
@@ -64,6 +65,22 @@ void apply(int state[8], int m) {
 
   for (int i = 0; i < 8; i++) {
     state[i] = ((temp3[moves[m][i] % 8] + 8 * (int)(moves[m][i] / 8)) % 24);
+  }
+}
+
+/********************************    
+ * applyAlg
+ *     An optimised alternative to `apply` for multiple sequential moves.
+*********************************/
+void applyAlg(int state[8], int m[], int l) {
+  int temp[8];
+
+  for (int j = 0; j < l; j++) {
+    memcpy(temp, state, 32);
+
+    for (int i = 0; i < 8; i++) {
+      state[i] = ((temp[moves[m[j]][i] % 8] + 8 * (int)(moves[m[j]][i] / 8)) % 24);
+    }
   }
 }
 
