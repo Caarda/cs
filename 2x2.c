@@ -1,3 +1,6 @@
+// first argument should be a string of moves, e.g. "U2 R' U2 R F2 R' U' R2 U2"
+// second argument should be desired depth of search (i.e. the maximum desired length of solutions) as an integer
+
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -296,7 +299,7 @@ int *moveStringToArray(char scr[]) {
  * solutionsFromString
  *     The core function called from main which handles the necessary logic for finding solutions.
 *********************************/
-void solutionsFromString(char scr[]) {
+void solutionsFromString(char scr[], int depth) {
   // convert the string into an array of move indices
   int* temp = moveStringToArray(scr);
 
@@ -320,15 +323,20 @@ void solutionsFromString(char scr[]) {
 
   // calculate and print solutions
   printf("-----\n");
-  findSolutionsInPlace(cube, 0, 11);
+  findSolutionsInPlace(cube, 0, depth);
 
   // free the allocated memory from `moveStringToArray`
   free(temp);
 }
 
 int main(int argc, char* argv[]) {
-  if (argv[1] && !argv[2]) {
-    solutionsFromString(argv[1]);
+  if (argv[1] && argv[2] && !argv[3]) {
+    struct timeval start, end;
+    gettimeofday(&start, NULL);
+    solutionsFromString(argv[1], strtol(argv[2], NULL, 10));
+    gettimeofday(&end, NULL);
+    double time_taken = end.tv_sec + end.tv_usec / 1e6 - start.tv_sec - start.tv_usec / 1e6;
+    printf("Found all solutions in %fs.\n", time_taken);
     return(0);
   } else {
     return(1);
